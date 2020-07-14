@@ -15,7 +15,11 @@ mapperRouter.get("/names", (request, response) => {
 
 mapperRouter.get("/byName", (request, response) => {
   const name = request.query.name;
-  response.json(instruments.filter((i) => i.instrument_type !== "FUT" && i.name === name));
+  if (!name) {
+    response.json([]);
+  } else {
+    response.json(instruments.filter((i) => i.instrument_type !== "FUT" && i.name === name));
+  }
 });
 
 module.exports = mapperRouter;
