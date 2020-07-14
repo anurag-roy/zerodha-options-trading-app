@@ -11,11 +11,11 @@ ticker.on("ticks", onTicks);
 ticker.on("connect", subscribe);
 
 function onTicks(ticks) {
-  console.log("Ticks", ticks[0].depth);
+  console.log("Ticks", ticks);
 }
 
 function subscribe() {
-  const items = [55963911];
+  const items = [11874306, 11874562];
   ticker.subscribe(items);
   ticker.setMode(ticker.modeFull, items);
 }
