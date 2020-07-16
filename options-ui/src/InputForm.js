@@ -12,6 +12,7 @@ import green from "@material-ui/core/colors/green";
 import axios from "axios";
 
 import DataStreamer from "./DataStreamer";
+import DataStreamerFinal from "./DataStreamerFinal";
 
 const InputForm = () => {
   const [state, setState] = useState("initial");
@@ -21,10 +22,13 @@ const InputForm = () => {
 
   const [quantityA, setQuantityA] = useState(0);
   const [quantityB, setQuantityB] = useState(0);
-  const [orderType, setOrderType] = useState("NRML");
+  const [productType, setProductType] = useState("NRML");
+
+  const [aEntryPrice, setAEntryPrice] = useState(0);
+  const [bEntryPrice, setBEntryPrice] = useState(0);
 
   useEffect(() => {
-    if (state !== "initial") {
+    if (state === "stocksSelected") {
       axios
         .get("http://localhost:8000/subscribe", {
           params: {
@@ -35,18 +39,42 @@ const InputForm = () => {
         .then((data) => console.log(data))
         .catch((error) => console.log(error));
     }
-  });
+
+    if (state === "stocksOrdered") {
+      axios
+        .post("http://localhost:8000/enterMarket", {
+          stockA,
+          stockB,
+          quantityA,
+          quantityB,
+          productType,
+          transactionType: "SELL",
+        })
+        .then(({ data }) => {
+          console.log("Entry Price Data: ", data);
+          setAEntryPrice(data.aEntryPrice);
+          setBEntryPrice(data.bEntryPrice);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [state]);
 
   const proceedButton = () => {
     if (!stockA || !stockB) {
-      alert("Please selected valid stocks. Cannot proceed");
+      alert("Please selected valid stocks. Cannot proceed.");
     } else {
       setState("stocksSelected");
     }
   };
 
   const confirmButton = () => {
-    console.log("Confirm button clicked");
+    if (quantityA === 0 || quantityB === 0) {
+      alert("Quantity cannot be 0. Cannot proceed.");
+    } else {
+      setState("stocksOrdered");
+    }
   };
 
   if (state === "initial") {
@@ -85,10 +113,14 @@ const InputForm = () => {
   } else if (state === "stocksSelected") {
     return (
       <div>
-        <DataStreamer tokenA={stockA.instrument_token} tokenB={stockB.instrument_token} />
+        <DataStreamer
+          stockA={stockA}
+          stockB={stockB}
+          tokenA={stockA.instrument_token}
+          tokenB={stockB.instrument_token}
+        />
         <Grid container direction="row" justify="center" alignItems="center" spacing={5}>
           <Grid item>
-            <SelectedStock input={"A"} data={stockA} />
             <br />
             <TextField
               id="quantity-a"
@@ -102,7 +134,6 @@ const InputForm = () => {
             />
           </Grid>
           <Grid item>
-            <SelectedStock input={"B"} data={stockB} />
             <br />
             <TextField
               id="quantity-b"
@@ -119,14 +150,14 @@ const InputForm = () => {
         <Grid container direction="row" justify="center" alignItems="center" spacing={5}>
           <Grid item>
             <FormControl variant="outlined">
-              <InputLabel>Order Type</InputLabel>
+              <InputLabel>Product Type</InputLabel>
               <Select
-                id="order-type"
-                value={orderType}
+                id="product-type"
+                value={productType}
                 onChange={(event) => {
-                  setOrderType(event.target.value);
+                  setProductType(event.target.value);
                 }}
-                label="Order Type"
+                label="Product Type"
                 style={{ width: 275 }}
               >
                 <MenuItem value={"NRML"}>NRML</MenuItem>
@@ -140,7 +171,7 @@ const InputForm = () => {
             <Button
               variant="contained"
               size="large"
-              style={{ background: green[800], color: "white" }}
+              style={{ background: green[600], color: "white" }}
               onClick={confirmButton}
             >
               Confirm
@@ -148,6 +179,17 @@ const InputForm = () => {
           </Grid>
         </Grid>
       </div>
+    );
+  } else if (state === "stocksOrdered") {
+    return (
+      <DataStreamerFinal
+        stockA={stockA}
+        stockB={stockB}
+        tokenA={stockA.instrument_token}
+        tokenB={stockB.instrument_token}
+        aEntryPrice={aEntryPrice}
+        bEntryPrice={bEntryPrice}
+      />
     );
   }
 };

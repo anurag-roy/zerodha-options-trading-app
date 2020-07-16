@@ -1,8 +1,6 @@
 import React from "react";
 import InputForm from "./InputForm";
 
-import DataStreamer from "./DataStreamer";
-
 const styles = {
   appInnerContainer: {
     width: "95%",
@@ -27,9 +25,5 @@ const App = () => {
     </div>
   );
 };
-
-// const App = () => {
-//   return <DataStreamer />;
-// };
 
 export default App;

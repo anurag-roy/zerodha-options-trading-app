@@ -21,7 +21,8 @@ const useStyles = makeStyles({
   },
 });
 
-function DataStreamer({ stockA, stockB, tokenA, tokenB }) {
+function DataStreamerFinal({ stockA, stockB, tokenA, tokenB, aEntryPrice, bEntryPrice }) {
+  console.log("Given Entry Prices: ", aEntryPrice, bEntryPrice);
   const [stockAPrice, setStockAPrice] = useState(0);
   const [stockBPrice, setStockBPrice] = useState(0);
 
@@ -52,11 +53,19 @@ function DataStreamer({ stockA, stockB, tokenA, tokenB }) {
           <Card className={classes.root}>
             <CardContent>
               <Typography className={classes.title} color="textSecondary" gutterBottom>
-                Live Price <br />
                 {stockA.tradingsymbol}
               </Typography>
               <Typography variant="h5" component="h2">
-                {stockAPrice}
+                Entered Price: {aEntryPrice}
+              </Typography>
+              <Typography variant="h5" component="h2">
+                Avg Price: {stockAPrice}
+              </Typography>
+              <Typography variant="h5" component="h2">
+                {stockA.instrument_type} Spread:{" "}
+                {stockA.instrument_type === "CE"
+                  ? stockA.strike + stockAPrice
+                  : stockA.strike - stockAPrice}
               </Typography>
             </CardContent>
           </Card>
@@ -66,26 +75,19 @@ function DataStreamer({ stockA, stockB, tokenA, tokenB }) {
           <Card className={classes.root}>
             <CardContent>
               <Typography className={classes.title} color="textSecondary" gutterBottom>
-                Live Price <br />
                 {stockB.tradingsymbol}
               </Typography>
               <Typography variant="h5" component="h2">
-                {stockBPrice}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <Grid container direction="row" justify="center" alignItems="center" spacing={5}>
-        <Grid item>
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography className={classes.title} color="textSecondary" gutterBottom>
-                Premium
+                Entered Price: {bEntryPrice}
               </Typography>
               <Typography variant="h5" component="h2">
-                {stockAPrice + stockBPrice}
+                Avg Price: {stockBPrice}
+              </Typography>
+              <Typography variant="h5" component="h2">
+                {stockB.instrument_type} Spread:{" "}
+                {stockB.instrument_type === "CE"
+                  ? stockB.strike + stockBPrice
+                  : stockB.strike - stockBPrice}
               </Typography>
             </CardContent>
           </Card>
@@ -95,4 +97,4 @@ function DataStreamer({ stockA, stockB, tokenA, tokenB }) {
   );
 }
 
-export default DataStreamer;
+export default DataStreamerFinal;
