@@ -35,36 +35,51 @@ app.get("/", (req, res) => {
 let tokenA, tokenB;
 
 app.get("/subscribe", (req, res) => {
+  console.log("Subscribe function called");
   tokenA = parseInt(req.query.tokenA);
   tokenB = parseInt(req.query.tokenB);
 
+  console.log("Token A:", tokenA);
+  console.log("Token B:", tokenB);
+
   ticker.connect();
 
-  res.send("Subscribed");
+  res.send("Subscribed to the tokens");
 });
 
 // Order function
-const order = (stock, transactionType, quantity, price) => {
+const order = async (stock, transactionType, quantity, product) => {
   // kc.placeOrder("regular", {
   //   exchange: stock.exchange,
   //   tradingsymbol: stock.tradingsymbol,
   //   transaction_type: transactionType,
   //   quantity,
-  //   product: "NRML",
+  //   product,
   //   order_type: "MARKET",
-  //   // price: price,
   // }).catch((error) => {
   //   console.log("Error while placing order", error);
   // });
   const timestamp = new Date();
   console.log(
-    `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, price: ${price}, quantity: ${quantity}`,
+    `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, product: ${product}, quantity: ${quantity}`,
   );
   console.log(`Time of order: ${timestamp.toUTCString()}`);
+
+  return `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, product: ${product}, quantity: ${quantity}`;
 };
 
-app.post("/enterMarket", (req, res) => {
-  const orderItems = req.body;
+app.post("/enterMarket", async (req, res) => {
+  const { stockA, stockB, quantityA, quantityB, productType, transactionType } = req.body;
+
+  const aPromise = order(stockA, transactionType, quantityA, productType);
+  const bPromise = order(stockB, transactionType, quantityB, productType);
+  await Promise.all([aPromise, bPromise]);
+
+  const positions = await kc.getPositions();
+  positionA = positions.net.find((e) => e.tradingsymbol === stockA.tradingsymbol);
+  positionB = positions.net.find((e) => e.tradingsymbol === stockB.tradingsymbol);
+
+  res.json({ aEntryPrice: positionA.average_price, bEntryPrice: positionB.average_price });
 });
 
 io.on("connection", (socket) => {
