@@ -14,6 +14,6 @@ kc.setAccessToken(accessToken);
 //   .then((data) => console.log(data))
 //   .catch((error) => console.error(error));
 
-kc.getMargins()
+kc.getPositions()
   .then((data) => console.log(data))
   .catch((error) => console.error(error));

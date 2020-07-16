@@ -15,7 +15,7 @@ function onTicks(ticks) {
 }
 
 function subscribe() {
-  const items = [11874306, 11874562];
+  const items = [11950082, 11950338];
   ticker.subscribe(items);
   ticker.setMode(ticker.modeFull, items);
 }
