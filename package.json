@@ -4,7 +4,7 @@
   "description": "App to trade in options.",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf build && cd options-ui && npm build --prod && cp build ../",
+    "build": "rm -rf build && cd options-ui && npm run build --prod && cp -r build ../",
     "start": "node socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
