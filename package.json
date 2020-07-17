@@ -4,6 +4,8 @@
   "description": "App to trade in options.",
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf build && cd options-ui && npm build --prod && cp build ../",
+    "start": "node socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anurag Roy",

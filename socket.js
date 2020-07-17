@@ -24,13 +24,13 @@ const ticker = new KiteTicker({
 app.use(cors());
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "build")));
+
 app.use("/mapper", mapperRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello");
 });
-
-// app.get("/enterMarket", (req, res) => {});
 
 let tokenA, tokenB;
 
@@ -42,6 +42,10 @@ app.get("/subscribe", (req, res) => {
   console.log("Token A:", tokenA);
   console.log("Token B:", tokenB);
 
+  if (ticker.connected()) {
+    ticker.disconnect();
+  }
+
   ticker.connect();
 
   res.send("Subscribed to the tokens");
@@ -49,21 +53,20 @@ app.get("/subscribe", (req, res) => {
 
 // Order function
 const order = async (stock, transactionType, quantity, product) => {
-  // kc.placeOrder("regular", {
+  const timestamp = new Date();
+  console.log(
+    `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, product: ${product}, quantity: ${quantity}`,
+  );
+  console.log(`Time of order: ${timestamp.toUTCString()}`);
+
+  // return kc.placeOrder("regular", {
   //   exchange: stock.exchange,
   //   tradingsymbol: stock.tradingsymbol,
   //   transaction_type: transactionType,
   //   quantity,
   //   product,
   //   order_type: "MARKET",
-  // }).catch((error) => {
-  //   console.log("Error while placing order", error);
-  // });
-  const timestamp = new Date();
-  console.log(
-    `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, product: ${product}, quantity: ${quantity}`,
-  );
-  console.log(`Time of order: ${timestamp.toUTCString()}`);
+  // })
 
   return `Order placed for ${stock.exchange}:${stock.tradingsymbol}, Transaction: ${transactionType}, product: ${product}, quantity: ${quantity}`;
 };
