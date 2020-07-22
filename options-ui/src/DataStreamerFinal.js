@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import SelectedStock from "./SelectedStock";
 import { Grid } from "@material-ui/core";
 
-const ENDPOINT = "http://127.0.0.1:8000";
+const ENDPOINT = "http://127.0.0.1:5000";
 
 const useStyles = makeStyles({
   root: {

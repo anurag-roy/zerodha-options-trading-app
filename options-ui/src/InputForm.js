@@ -30,7 +30,7 @@ const InputForm = () => {
   useEffect(() => {
     if (state === "stocksSelected") {
       axios
-        .get("http://localhost:8000/subscribe", {
+        .get("http://localhost:5000/subscribe", {
           params: {
             tokenA: stockA.instrument_token,
             tokenB: stockB.instrument_token,
@@ -42,7 +42,7 @@ const InputForm = () => {
 
     if (state === "stocksOrdered") {
       axios
-        .post("http://localhost:8000/enterMarket", {
+        .post("http://localhost:5000/enterMarket", {
           stockA,
           stockB,
           quantityA,

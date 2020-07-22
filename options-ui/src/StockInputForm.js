@@ -14,13 +14,13 @@ const StockInputForm = ({ label, handleChange }) => {
   const [iType, setIType] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8000/mapper/names").then((result) => {
+    axios.get("http://localhost:5000/mapper/names").then((result) => {
       setNames(result.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/mapper/byName", { params: { name: name } }).then((result) => {
+    axios.get("http://localhost:5000/mapper/byName", { params: { name: name } }).then((result) => {
       setData(result.data);
       setExpiry("");
       setIType("");
