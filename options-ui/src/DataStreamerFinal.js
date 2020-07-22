@@ -64,8 +64,8 @@ function DataStreamerFinal({ stockA, stockB, tokenA, tokenB, aEntryPrice, bEntry
               <Typography variant="h5" component="h2">
                 {stockA.instrument_type} Spread:{" "}
                 {stockA.instrument_type === "CE"
-                  ? stockA.strike + stockAPrice
-                  : stockA.strike - stockAPrice}
+                  ? stockA.strike + aEntryPrice
+                  : stockA.strike - aEntryPrice}
               </Typography>
             </CardContent>
           </Card>
@@ -86,8 +86,8 @@ function DataStreamerFinal({ stockA, stockB, tokenA, tokenB, aEntryPrice, bEntry
               <Typography variant="h5" component="h2">
                 {stockB.instrument_type} Spread:{" "}
                 {stockB.instrument_type === "CE"
-                  ? stockB.strike + stockBPrice
-                  : stockB.strike - stockBPrice}
+                  ? stockB.strike + bEntryPrice
+                  : stockB.strike - bEntryPrice}
               </Typography>
             </CardContent>
           </Card>
